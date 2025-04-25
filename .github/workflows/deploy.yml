@@ -37,12 +37,12 @@ jobs:
       - name: Deploy to server via SSH
         env:
           HOST: ${{ secrets.SERVER_HOST }}
-          USER: ${{ secrets.SERVER_USER }}
           PORT: ${{ secrets.SERVER_PORT }}
+          USER: ${{ secrets.SERVER_USER }}
           PRIVATE_KEY: ${{ secrets.SERVER_PRIVATE_KEY }}
         run: |
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
-          ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST "cd /home/levius/my-project && git pull origin main && npm install && pm2 restart ecosystem.config.js"
+          ssh -o StrictHostKeyChecking=no -i private_key.pem -p $PORT $USER@$HOST "cd /home/levius/test-nodejs-ubuntu && git pull origin main && npm install && pm2 restart ecosystem.config.js"
 
- 
+      
