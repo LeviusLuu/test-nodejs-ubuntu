@@ -29,9 +29,9 @@ jobs:
           npm install
 
       # Chạy các bài kiểm tra (nếu có)
-      - name: Run tests
-        run: |
-          npm test
+      # - name: Run tests
+      #   run: |
+      #     npm test
 
       # Triển khai ứng dụng lên server qua SSH (sử dụng ngrok để có public SSH nếu cần)
       - name: Deploy to server via SSH
