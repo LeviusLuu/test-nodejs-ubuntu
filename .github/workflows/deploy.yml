@@ -44,3 +44,4 @@ jobs:
           chmod 600 private_key.pem
           ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST "cd /home/levius/my-project && git pull origin main && npm install && pm2 restart ecosystem.config.js"
 
+ 
