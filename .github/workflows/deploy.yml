@@ -46,10 +46,10 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key.pem -p $PORT $USER@$HOST '
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm install 22.15.0 && nvm use 22.15.0
             cd /home/'"$USER"'/test-nodejs-ubuntu &&
             git stash &&
             git pull origin main &&
-            nvm use &&
             npm install &&
             pm2 restart ecosystem.config.js
           '
