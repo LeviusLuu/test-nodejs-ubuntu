@@ -32,7 +32,7 @@ const app = express();
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send(`App is running in ${NODE_ENV} mode!`);
+  res.send(`App is running in ${NODE_ENV} mode! >>>>>>>>>>>>>>>>>>`);
 });
 
 app.use("/api", appRoutes);
