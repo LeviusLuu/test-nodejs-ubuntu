@@ -1,39 +1,39 @@
 name: Node.js CI/CD Pipeline
-
+ 
 on:
   push:
     branches:
-      - main  # Bạn có thể thay đổi branch nếu cần
+      - main
   pull_request:
     branches:
-      - main  # Bạn có thể thay đổi branch nếu cần
-
+      - main
+ 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+ 
     steps:
       # Lấy mã nguồn từ GitHub repository
       - name: Checkout code
         uses: actions/checkout@v2
-
-      # Cài đặt Node.js
+ 
+      # Cài đặt Node.js (chỉ dùng để build local nếu cần)
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '22.15.0'  # Thay đổi theo version của bạn
-
-      # Cài đặt các dependencies
+          node-version: '22.15.0'  # Thay đổi nếu bạn dùng version khác
+ 
+      # Cài đặt dependencies nếu bạn build trước khi deploy
       - name: Install dependencies
         run: |
           npm install
-
-      # Chạy các bài kiểm tra (nếu có)
+ 
+      # (Tuỳ chọn) Chạy test
       # - name: Run tests
       #   run: |
       #     npm test
-
-      # Triển khai ứng dụng lên server qua SSH (sử dụng ngrok để có public SSH nếu cần)
+ 
+      # Deploy lên server qua SSH
       - name: Deploy to server via SSH
         env:
           HOST: ${{ secrets.SERVER_HOST }}
@@ -43,10 +43,13 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
-          ssh -o StrictHostKeyChecking=no -i private_key.pem -p $PORT $USER@$HOST "
-            cd /home/leviu/test-nodejs-ubuntu &&
-            git stash && 
-            git pull origin main && 
-            npm install && 
+          ssh -o StrictHostKeyChecking=no -i private_key.pem -p $PORT $USER@$HOST '
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            cd /home/'"$USER"'/test-nodejs-ubuntu &&
+            git stash &&
+            git pull origin main &&
+            nvm use &&
+            npm install &&
             pm2 restart ecosystem.config.js
-          "
+          '
